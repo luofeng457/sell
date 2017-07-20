@@ -44,6 +44,8 @@
 <style lang="stylus" rel="stylesheet/stylus">
   @import "./common/stylus/mixin.styl"
   #app
+    min-width: 320px
+    max-widht: 1024px
     .tab
       display: flex
       width: 100%

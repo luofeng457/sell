@@ -7,6 +7,8 @@ import Merchants from '@/components/Merchants/Merchants.vue';
 Vue.use(Router);
 
 export default new Router({
+  // mode: 'hash',
+  // base: __dirname,
   routes: [
   	{
   	  path: '/',

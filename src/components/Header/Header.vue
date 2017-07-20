@@ -29,42 +29,44 @@
 		<div class="backgroud">
 			<img :src="merchants.avatar" width="100%" height="100%">
 		</div>
-		<div v-show="detailShow" class="detail">
-			<div class="detail-wrapper clearfix">
-				<div class="detail-main">
-					<h1 class="name">{{ merchants.name }}</h1>
-					<div class="star-wrapper">
-						<Star class="star" :size="48" :score="merchants.score"></Star>
-					</div>
-					<div class="detail-specials">
-						<div class="detail-specials-header">
-							<div class="header-title">优惠信息</div>
-							<span class="border-1px divider1"></span>
-							<span class="border-1px divider2"></span>
+		<transition name="fade">
+			<div v-show="detailShow" class="detail">
+				<div class="detail-wrapper clearfix">
+					<div class="detail-main">
+						<h1 class="name">{{ merchants.name }}</h1>
+						<div class="star-wrapper">
+							<Star class="star" :size="48" :score="merchants.score"></Star>
 						</div>
-						<div v-if="merchants.supports" class="detail-specials-info">
-							<div v-for="(special, index) in merchants.supports" class="special-info">
-								<span :class="classMap[special.type]" class="special-icon"></span>
-								<span class="special-text">{{ special.description }}</span>
+						<div class="detail-specials">
+							<div class="detail-specials-header">
+								<div class="header-title">优惠信息</div>
+								<span class="border-1px divider1"></span>
+								<span class="border-1px divider2"></span>
+							</div>
+							<div v-if="merchants.supports" class="detail-specials-info">
+								<div v-for="(special, index) in merchants.supports" class="special-info">
+									<span :class="classMap[special.type]" class="special-icon"></span>
+									<span class="special-text">{{ special.description }}</span>
+								</div>
+							</div>
+						</div>
+						<div class="detail-bulletin">
+							<div class="detail-bulletin-header">
+								<div class="header-title">商家公告</div>
+								<span class="border-1px divider3"></span>
+								<span class="border-1px divider4"></span>
+							</div>
+							<div class="detail-bulletin-info">
+								<p class="bulletin-text">{{ merchants.bulletin }}</p>
 							</div>
 						</div>
 					</div>
-					<div class="detail-bulletin">
-						<div class="detail-bulletin-header">
-							<div class="header-title">商家公告</div>
-							<span class="border-1px divider3"></span>
-							<span class="border-1px divider4"></span>
-						</div>
-						<div class="detail-bulletin-info">
-							<p class="bulletin-text">{{ merchants.bulletin }}</p>
-						</div>
-					</div>
+				</div>
+				<div class="detail-close icon-close" @click="hideDetail">
+					
 				</div>
 			</div>
-			<div class="detail-close icon-close">
-				
-			</div>
-		</div>
+		</transition>
 	</div>
 
 </template>
@@ -89,6 +91,9 @@
 		methods: {
 			showDetail () {
 				this.detailShow = true;
+			},
+			hideDetail () {
+				this.detailShow = false;
 			}
 		},
 		components: {
@@ -159,7 +164,6 @@
 					.text
 						line-height: 12px
 						font-size: 10px
-						
 			.support-content
 				position: absolute
 				right: 12px
@@ -225,6 +229,11 @@
 			height: 100%
 			overflow: auto
 			background: rgba(7, 17, 27, 0.8)
+			&.fade-enter-active
+				transition all 0.4s
+			&.fade-enter
+				opacity: 0
+				background: rgba(7, 17, 27, 0)
 			.detail-wrapper
 				width: 100%
 				min-height: 100%
@@ -278,15 +287,15 @@
 									background-size 16px 16px
 									background-repeat no-repeat
 									&.decrease
-										bg-image('decrease_1')
+										bg-image('decrease_2')
 									&.discount
-										bg-image('discount_1')
+										bg-image('discount_2')
 									&.special
-										bg-image('special_1')
+										bg-image('special_2')
 									&.invoice
-										bg-image('invoice_1')
+										bg-image('invoice_2')
 									&.guarantee
-										bg-image('guarantee_1')
+										bg-image('guarantee_2')
 								.special-text
 									vertical-align: top
 									line-height: 12px
@@ -327,6 +336,4 @@
 				margin: -64px auto 0 auto
 				clear: both
 				font-size: 32px
-		
-				
 </style>
