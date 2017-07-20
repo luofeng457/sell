@@ -2,7 +2,7 @@
 	<div class="goods">
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul class="menu-list">
-				<li class="menu-item" v-for="(item,index) in goods" :class="{'current': currentIndex===index}">
+				<li class="menu-item" v-for="(item, index) in goods" :key="index" :class="{'current': currentIndex===index}" @click="selectMenu(index, $event)">
 					<span class="text border-1px">
 						<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{ item.name }}
 					</span>
@@ -68,7 +68,7 @@
 				for (let i = 0; i < this.listHight.length; i++) {
 					let height1 = this.listHight[i];
 					let height2 = this.listHight[i + 1];
-					if (!height2 || (this.scrollY > height1 && this.scrollY < height2)) {
+					if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
 						return i;
 					}
 				}
@@ -90,7 +90,8 @@
 		},
 		methods: {
 			_initScroll () {
-				this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+				// 移动端默认支持touch.start/touch.move/touch.end事件，阻止其他默认事件，所以需要传递option：{click: true}以支持点击事件
+				this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true});
 				this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3});
 				this.foodsScroll.on('scroll', (pos) => {
 					this.scrollY = Math.abs(Math.round(pos.y));
@@ -105,6 +106,16 @@
 					height += item.clientHeight;
 					this.listHight.push(height);
 				}
+			},
+			selectMenu (index, event) {
+				// 避免PC端点击时触发两次事件
+				if (!event._constructed) {	// better-scroll派发事件相比浏览器原生事件有_constructed属性
+					return;
+				}
+				// 使用better-scroll的scrollToElement方法实现左右联动
+				let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+				let el = foodList[index];
+				this.foodsScroll.scrollToElement(el, 300);
 			},
 			countAdd () {
 				this.foodCount++;
@@ -145,7 +156,7 @@
 						position: relative
 						z-index: 10
 						margin-top: -1px
-						background: #fff
+						background: red
 						font-weight: 700
 						.text
 							border-none()
