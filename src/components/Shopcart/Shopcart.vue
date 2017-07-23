@@ -2,7 +2,7 @@
 	<div class="shopcart">
 		<div class="content">
 			<div class="content-left">
-				<div class="logo-wrapper" @click="showCart">
+				<div class="logo-wrapper" @click.stop="showCart">
 					<div class="logo" :class="{'highlight': totalCount}">
 						<i class="icon-shopping_cart" :class="{'highlight': totalCount}"></i>
 					</div>
@@ -30,22 +30,28 @@
 				</div>
 			</transition-group>
 		</div>
-		<div class="cart-detail" v-show="toggleShow">
-			<div class="content">
+		<transition name="up-down">
+			<div class="shop-list" v-show="toggleShow">
 				<div class="header">
 					<span class="title">购物车</span>
-					<span class="clear"><span @click="clearMenu">清空</span></span>
+					<div class="clear"><span @click="clearMenu">清空</span></div>
 				</div>
-				<ul ref="listContent" class="items">
-					<li class="item" v-for="food in selectFoods">
-						<span class="food-name">{{ food.name }}</span>
-						<span class="foodPrices">&nbsp;¥&nbsp;{{ food.count * food.price }}</span>
-						<span class="num-control"><cartControl :food="food"></cartControl></span>
-					</li>
-				</ul>
+				<div ref="listContent" class="items">
+					<ul>
+						<li class="item" v-for="food in selectFoods">
+							<span class="food-name">{{ food.name }}</span>
+							<span class="food-prices">&nbsp;¥&nbsp;{{ food.count * food.price }}</span>
+							<span class="num-control"><cartControl :food="food"></cartControl></span>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</div>
+		</transition>
+		<transition name="mask-fade">
+			<div class="list-mask" v-show="toggleShow"></div>
+		</transition>
 	</div>
+
 </template>
 
 <script>
@@ -139,6 +145,7 @@
 				} else {
 					this.toggleShow = !this.toggleShow;
 				}
+				console.log(this.$refs.listContent);
 				if (this.toggleShow) {
 					this.$nextTick(() => {
 						if (!this.scroll) {
@@ -225,6 +232,7 @@
 		.content
 			display: flex
 			background: #141d27
+			z-index: 50
 			.content-left
 				flex: 1
 				.logo-wrapper
@@ -318,95 +326,82 @@
 					border-radius: 50%
 					background: rgb(0,160,220)
 					transition all .5s linear
-		.cart-detail
-			position: fixed
+		.up-down-enter-active
+			transition all .4s
+		.up-down-enter
+			opacity: 0
+			transform: translate(0, 100%)
+		.shop-list
+			position: absolute
 			left: 0
-			top: 0
+			bottom: 48px
+			z-index: -1	
 			width: 100%
-			z-index: -1
-			// height: calc(100% - 65px)
-			height: 100%
-			font-size: 0
-			background: rgba(7, 17, 27, 0.8)
-			.content
-				display: flex
-				position: absolute
-				flex-direction: column
-				left: 0
-				bottom: 0
-				// padding-bottom: 60px
+			background: white
+			.header
+				width: 100%
+				height: 40px
+				line-height: 40px
+				padding: 0 18px
 				box-sizing: border-box
-				width: calc(100% + 5px)	/* 隐藏滚动条 */
-				max-height: 306px
-				overflow: auto
-				background: white
-				.header
-					display: flex
-					flex: none
-					width: 100%
-					height: 40px
+				background: #f3f5f7
+				border-bottom: 2px solid rgba(7, 17, 27, 0.1)
+				.title
+					float: left
+					font-size: 14px
+					color: rgb(7, 17, 27)
+				.clear
+					float: right
+					font-size: 12px
+					color: rgb(0, 160, 220)
+			.items
+				position: relative
+				width: 100%
+				max-height: 217px
+				box-sizing: border-box
+				overflow: hidden
+				background: rgba(255,255,255,0)
+				backdrop-filter: blur(10px)
+				.item
+					display: block
+					height: 48px
 					padding: 0 18px
-					box-sizing: border-box
-					background: #f3f5f7
-					border-bottom: 2px solid rgba(7, 17, 27, 0.1)
-					.title
-						flex: 1
-						line-height: 40px
+					border-1px(rgba(7, 17, 27, 0.1))						
+					.food-name
+						display: inline-block
+						vertical-align: top
+						padding-top: 12px
+						line-height: 24px
 						font-size: 14px
+						font-weight: 700
 						color: rgb(7, 17, 27)
-					.clear
-						flex: 1
-						line-height: 40px
-						font-size: 12px
-						text-align: right
-						color: rgb(0, 160, 220)
-				.items
-					position: relative
-					width: 100%
-					box-sizing: border-box
-					height: 100%
-					overflow: auto
-					background: rgba(255,255,255,0)
-					backdrop-filter: blur(10px)
-					.item
-						display: block
-						height: 48px
-						// width: 100%
-						// box-sizing: border-box
-						padding: 0 18px
-						border-1px(rgba(7, 17, 27, 0.1))
-						background: white
-						&:last-child
-							// margin-bottom: 60px
-							
-						.food-name
-							display: inline-block
-							vertical-align: top
-							padding-top: 12px
-							line-height: 24px
-							font-size: 14px
-							font-weight: 700
-							color: rgb(7, 17, 27)
-						.foodPrices
-							position: absolute
-							right: 102px
-							display: inline-block
-							vertical-align top
-							padding-top: 12px
-							line-height: 24px
-							text-align: right
-							font-size: 10px
-							font-weigth: 700
-							color: rgb(240, 20, 20)
-						.num-control
-							position: absolute
-							right: 12px
-							display: inline-block
-							vertical-align: top
-							padding-top: 6px
-							line-height: 24px
-							font-size: 24px
-							font-weight: 700
-							color: rgb(7, 17, 27)								
+					.food-prices
+						position: absolute
+						right: 102px
+						padding-top: 12px
+						line-height: 24px
+						font-size: 10px
+						font-weigth: 700
+						color: rgb(240, 20, 20)
+					.num-control
+						position: absolute
+						right: 12px
+						padding-top: 6px
+						line-height: 24px
+						font-size: 24px
+						font-weight: 700
+						color: rgb(7, 17, 27)								
+		.mask-fade-enter-active
+			transition all .4s linear
+		.mask-fade-enter
+			opacity: 0
+		.list-mask
+			position: fixed
+			top: 0
+			left: 0
+			width: 100%
+			height: calc(100% - 48px)
+			z-index: -2
+			background: rgba(7,17,27,.6)
 
 </style>
