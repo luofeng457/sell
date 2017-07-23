@@ -36,7 +36,7 @@
 					<span class="title">购物车</span>
 					<span class="clear"><span @click="clearMenu">清空</span></span>
 				</div>
-				<ul class="items">
+				<ul ref="listContent" class="items">
 					<li class="item" v-for="food in selectFoods">
 						<span class="food-name">{{ food.name }}</span>
 						<span class="foodPrices">&nbsp;¥&nbsp;{{ food.count * food.price }}</span>
@@ -49,7 +49,8 @@
 </template>
 
 <script>
-	// import BScroll from 'better-scroll';
+	// 引入better-scroll实现购物车详情中的联动
+	import BScroll from 'better-scroll';
 	import cartControl from '@/components/cartControl/cartControl.vue';
 
 	export default {
@@ -137,6 +138,17 @@
 					this.toggleShow = false;
 				} else {
 					this.toggleShow = !this.toggleShow;
+				}
+				if (this.toggleShow) {
+					this.$nextTick(() => {
+						if (!this.scroll) {
+							this.scroll = new BScroll(this.$refs.listContent, {
+								click: true
+							});
+						} else {
+							this.scroll.refresh();
+						}
+					});
 				}
 			},
 			clearMenu () {
@@ -322,11 +334,11 @@
 				flex-direction: column
 				left: 0
 				bottom: 0
-				padding-bottom: 60px
+				// padding-bottom: 60px
 				box-sizing: border-box
 				width: calc(100% + 5px)	/* 隐藏滚动条 */
 				max-height: 306px
-				// overflow: scroll
+				overflow: auto
 				background: white
 				.header
 					display: flex
@@ -355,6 +367,7 @@
 					height: 100%
 					overflow: auto
 					background: rgba(255,255,255,0)
+					backdrop-filter: blur(10px)
 					.item
 						display: block
 						height: 48px
