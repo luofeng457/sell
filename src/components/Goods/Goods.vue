@@ -11,10 +11,10 @@
 		</div>
 		<div class="foods-wrapper" ref="foodsWrapper">
 			<ul>
-				<li v-for="item in goods" class="food-list food-list-hook" >
+				<li v-for="(item,goodIndex) in goods" :key="goodIndex" class="food-list food-list-hook">
 					<h1 class="title">{{ item.name }}</h1>
 					<ul>
-						<li v-for="food in item.foods" class="food-item">
+						<li v-for="(food,foodIndex) in item.foods" class="food-item food-item-hook">
 							<div class="icon">
 								<img :src="food.icon" width="57" height="57">
 							</div>
@@ -29,22 +29,30 @@
 									<span class="newPrice">¥{{ food.price }}</span>
 									<span class="oldPrice" v-show="food.oldPrice">¥{{ food.price }}</span>
 								</div>
-								<div class="count">
-									<span class="icon-remove_circle_outline" v-show="foodCount" @click="countReduce"></span>
-									<span class="num" v-show="foodCount">{{ foodCount }}</span>
-									<span class="icon-add_circle" @click="countAdd"></span>
+								<div class="cartcontrol-wrapper">
+									<cartControl :food="food" v-on:cart-add="cartAdd">
+										
+									</cartControl>
 								</div>
+<!-- 								<div class="count">
+									<span class="icon-remove_circle_outline" v-show="food.count" @click="countReduce(goodIndex,foodIndex)"></span>
+									<span class="num" v-show="food.count">{{ food.count }}</span>
+									<span class="icon-add_circle" :key="goodIndex" @click="countAdd(goodIndex,foodIndex)"></span>
+								</div> -->
 							</div>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
+		<shopcart ref="shopcart" :merchants="merchants" :delivery-price="merchants.deliveryPrice" :min-price="merchants.minPrice" :select-foods="selectFoods"></shopcart>
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll';
+	import shopcart from '@/components/Shopcart/Shopcart.vue';
+	import cartControl from '@/components/cartControl/cartControl.vue';
 
 	const ERR_OK = 0;
 	export default {
@@ -54,7 +62,8 @@
 				goods: [],
 				listHight: [],
 				scrollY: 0,
-				foodCount: 0,
+				goodIndex: 0,
+				foodIndex: 0,
 				actived: false
 			};
 		},
@@ -73,6 +82,17 @@
 					}
 				}
 				return 0;
+			},
+			selectFoods () {
+				let foods = [];
+				this.goods.forEach((good) => {
+					good.foods.forEach((food) => {
+						if (food.count) {
+							foods.push(food);
+						}
+					});
+				});
+				return foods;
 			}
 		},
 		created () {
@@ -92,7 +112,7 @@
 			_initScroll () {
 				// 移动端默认支持touch.start/touch.move/touch.end事件，阻止其他默认事件，所以需要传递option：{click: true}以支持点击事件
 				this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true});
-				this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {probeType: 3});
+				this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {click: true, probeType: 3});
 				this.foodsScroll.on('scroll', (pos) => {
 					this.scrollY = Math.abs(Math.round(pos.y));
 				});
@@ -107,6 +127,7 @@
 					this.listHight.push(height);
 				}
 			},
+			// 在需要访问原生DOM事件时，需要将$event作为方法的一个参数传入
 			selectMenu (index, event) {
 				// 避免PC端点击时触发两次事件
 				if (!event._constructed) {	// better-scroll派发事件相比浏览器原生事件有_constructed属性
@@ -117,16 +138,20 @@
 				let el = foodList[index];
 				this.foodsScroll.scrollToElement(el, 300);
 			},
-			countAdd () {
-				this.foodCount++;
-				console.log(this.foodCount);
+			cartAdd (target) {
+				// console.log('goods: ' + target);
+				this._drop(target);
 			},
-			countReduce () {
-				if (this.foodCount) {
-					this.foodCount--;
-					console.log(this.foodCount);
-				}
+			_drop (target) {
+				// 异步执行小球动画进行体验优化
+				this.$nextTick(() => {
+					this.$refs.shopcart.drop(target);
+				});
 			}
+		},
+		components: {
+			shopcart,
+			cartControl
 		}
 	};
 </script>
@@ -242,12 +267,18 @@
 								font-weight: 700px
 								color: rgb(147, 153, 159)
 								text-decoration: line-through
+						.cartcontrol-wrapper
+							position: absolute
+							right: 0
+							bottom: -6px
 						.count
 							position: absolute
 							right: 0
 							bottom: 0
 							font-size: 0
 							.icon-remove_circle_outline,.icon-add_circle
+								display: inline-block
+								vertical-align: top
 								line-height: 24px
 								font-size: 24px
 								color: rgb(0, 160, 220)

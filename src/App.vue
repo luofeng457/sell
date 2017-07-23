@@ -12,12 +12,13 @@
         <router-link to="/merchants">商家</router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <router-view :merchants="merchants"></router-view>
   </div>
 </template>
 
 <script>
   import Header from './components/Header/Header.vue';
+  import Goods from './components/Goods/Goods.vue';
 
   const ERR_OK = 0;
 
@@ -36,7 +37,8 @@
       });
     },
     components: {
-      'v-header': Header
+      'v-header': Header,
+      Goods
     }
 };
 </script>

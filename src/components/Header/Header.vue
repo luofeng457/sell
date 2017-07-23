@@ -230,7 +230,7 @@
 			overflow: auto
 			background: rgba(7, 17, 27, 0.8)
 			&.fade-enter-active
-				transition all 0.4s
+				transition all 0.2s linear
 			&.fade-enter
 				opacity: 0
 				background: rgba(7, 17, 27, 0)
