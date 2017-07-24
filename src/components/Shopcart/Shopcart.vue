@@ -13,7 +13,7 @@
 				</div>
 				<div class="desc">另需配送费&nbsp;¥&nbsp;{{ merchants.deliveryPrice }}元</div>
 			</div>
-			<div class="content-right"  :class="{'delivery': payment}">
+			<div class="content-right"  :class="{'delivery': payment}" @click="payMoney">
 				<div class="pay" :class="{'delivery': payment}">{{ payDesc }}</div>
 			</div>
 		</div>
@@ -145,7 +145,6 @@
 				} else {
 					this.toggleShow = !this.toggleShow;
 				}
-				console.log(this.$refs.listContent);
 				if (this.toggleShow) {
 					this.$nextTick(() => {
 						if (!this.scroll) {
@@ -173,6 +172,11 @@
 						this.dropBalls.push(ball);
 						return;
 					}
+				}
+			},
+			payMoney () {
+				if (this.totalPrice >= this.minPrice) {
+					window.confirm('You should pay ¥' + this.totalPrice);
 				}
 			},
 			beforeEnter (el) {
@@ -224,15 +228,14 @@
 		position: fixed
 		left: 0
 		bottom: 0
-		z-index: 50	
 		width: 100%
 		height: 48px
 		font-size: 0
+		z-index: 400
 		background: #141d27
 		.content
 			display: flex
 			background: #141d27
-			z-index: 50
 			.content-left
 				flex: 1
 				.logo-wrapper

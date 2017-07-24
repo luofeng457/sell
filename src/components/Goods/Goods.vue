@@ -14,7 +14,7 @@
 				<li v-for="(item,goodIndex) in goods" :key="goodIndex" class="food-list food-list-hook">
 					<h1 class="title">{{ item.name }}</h1>
 					<ul>
-						<li v-for="(food,foodIndex) in item.foods" class="food-item food-item-hook">
+						<li @click="foodSelect(food, $event)" v-for="(food,foodIndex) in item.foods" class="food-item food-item-hook">
 							<div class="icon">
 								<img :src="food.icon" width="57" height="57">
 							</div>
@@ -46,6 +46,7 @@
 			</ul>
 		</div>
 		<shopcart ref="shopcart" :merchants="merchants" :delivery-price="merchants.deliveryPrice" :min-price="merchants.minPrice" :select-foods="selectFoods"></shopcart>
+		<food :food="selectedFood" ref="food" v-on:cart-add="cartAdd" :cartAdd="cartAdd"></food>
 	</div>
 </template>
 
@@ -53,6 +54,7 @@
 	import BScroll from 'better-scroll';
 	import shopcart from '@/components/Shopcart/Shopcart.vue';
 	import cartControl from '@/components/cartControl/cartControl.vue';
+	import food from '@/components/Food/Food.vue';
 
 	const ERR_OK = 0;
 	export default {
@@ -64,6 +66,7 @@
 				scrollY: 0,
 				goodIndex: 0,
 				foodIndex: 0,
+				selectedFood: {},
 				actived: false
 			};
 		},
@@ -139,19 +142,23 @@
 				this.foodsScroll.scrollToElement(el, 300);
 			},
 			cartAdd (target) {
-				// console.log('goods: ' + target);
-				this._drop(target);
-			},
-			_drop (target) {
 				// 异步执行小球动画进行体验优化
 				this.$nextTick(() => {
 					this.$refs.shopcart.drop(target);
 				});
+			},
+			foodSelect (food, event) {
+				if (!event._constructed) {
+					return;
+				}
+				this.selectedFood = food;
+				this.$refs.food.show();
 			}
 		},
 		components: {
 			shopcart,
-			cartControl
+			cartControl,
+			food
 		}
 	};
 </script>
@@ -291,7 +298,5 @@
 								line-height: 24px
 								font-size: 10px
 								color: rgb(147, 153, 159)
-								
-								
-							
+														
 </style>

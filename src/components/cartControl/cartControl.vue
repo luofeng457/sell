@@ -1,10 +1,10 @@
 <template>
 	<div class="cartControl">
 		<transition-group name="move-fade" v-show="food.count" tag="div">
-			<div class="cart-decrease icon-remove_circle_outline" v-show="food.count" @click="reduceCount" key="decrease"></div>
+			<div class="cart-decrease icon-remove_circle_outline" v-show="food.count" @click.stop="reduceCount" key="decrease"></div>
 			<div class="cart-count" v-show="food.count" key="countNum">{{ food.count }}</div>
 		</transition-group>
-		<div class="cart-increase icon-add_circle" @click="addCount"></div>
+		<div class="cart-increase icon-add_circle" @click.stop="addCount"></div>
 	</div>
 </template>
 
