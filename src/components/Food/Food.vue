@@ -35,7 +35,7 @@
 				<split class="split" v-show=food.info></split>
 				<div class="ratings">
 					<h1 class="title">商品评价</h1>
-					<ratingselect :ratings="food.ratings" :select-type="selectType" :only-content="onlyContent" :desc="desc"></ratingselect>
+					<ratingselect :ratings="food.ratings" :select-type="selectType" :only-content="onlyContent" :desc="desc" ref="ratingSelect" v-on:select-all="showAll" v-on:select-pos="showPos" v-on:select-neg="showNeg" v-on:select-content="showContent"></ratingselect>
 				</div>
 			</div>
 		</div>
@@ -49,8 +49,8 @@
 	import split from '@/components/Split/Split.vue';
 	import ratingselect from '@/components/ratingSelect/ratingSelect.vue';
 
-	// const POSITIVE = 0;
-	// const NEGATIVE = 1;
+	const POSITIVE = 0;
+	const NEGATIVE = 1;
 	const ALL = 2;
 
 	export default {
@@ -86,6 +86,7 @@
 							click: true,
 							probeType: 3
 						});
+						this.$refs.ratingSelect.formatTime();
 					} else {
 						this.scroll.refresh();
 					}
@@ -100,6 +101,28 @@
 				}
 				this.$emit('cart-add', event.target);
 				Vue.set(this.food, 'count', 1); // Vue实例给对象添加属性并可以被watcher监测的话需要使用Vue.set
+			},
+			showAll () {
+				this.selectType = ALL;
+				this.scroll.refresh();
+			},
+			showPos () {
+				this.selectType = POSITIVE;
+				this.scroll.refresh();
+			},
+			showNeg () {
+				this.selectType = NEGATIVE;
+				this.scroll.refresh();
+			},
+			showContent () {
+				this.onlyContent = !this.onlyContent;
+				// if (this.onlyContent) {
+				// 	this.$refs.ratingSelect.ratings.forEach((rating) => {
+				// 		if (!rating.text) {
+				// 			this.$refs.ratingSelect.contentFlag = false;
+				// 		}
+				// 	});
+				// }
 			}
 		},
 		components: {
@@ -202,20 +225,6 @@
 					color: #fff
 					background: rgb(0,160,220)
 					font-size: 10px
-				
-				// .add-to-cart
-				// 	display: inline-block
-				// 	vertical-align middle
-				// 	width: 74px
-				// 	height: 24px
-				// 	border-radius: 12px
-				// 	line-height: 12px
-
-				// 	background: rgb(0,160,240)
-				// 	.info
-				// 		padding: 6px 12px
-				// 		fon-size: 10px
-				// 		color: white
 			.introduce
 				margin: 18px
 				.title
@@ -229,9 +238,8 @@
 					font-size: 12px
 					color: rgb(77, 85, 93)
 			.ratings
-				margin: 18px
 				.title
-					margin-bottom: 6px
+					margin: 18px
 					line-height: 24px
 					font-size: 12px
 					font-weight: 700
