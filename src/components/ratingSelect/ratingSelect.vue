@@ -11,7 +11,7 @@
 		</div>
 		<div class="segment"></div>
 		<div class="rating-list">
-			<div class="wrapper" v-for="(rating,index) in ratings" :key="index" v-show="!onlyContent?true:rating.text">
+			<div class="wrapper" v-for="(rating,index) in ratings" v-show="!onlyContent?true:rating.text">
 				<div class="inner" v-show="selectType===2?true:rating.rateType===selectType">
 					<div class="info">
 						<div class="time">{{ formatedTime[index]}}</div>
