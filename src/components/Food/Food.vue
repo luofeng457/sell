@@ -104,15 +104,12 @@
 			},
 			showAll () {
 				this.selectType = ALL;
-				this.scroll.refresh();
 			},
 			showPos () {
 				this.selectType = POSITIVE;
-				this.scroll.refresh();
 			},
 			showNeg () {
 				this.selectType = NEGATIVE;
-				this.scroll.refresh();
 			},
 			showContent () {
 				this.onlyContent = !this.onlyContent;
