@@ -1,22 +1,138 @@
 <template>
 	<div class="ratings">
-		<p>{{ msg }}</p>
+	<div class="ratings-content">
+		<div class="overview">
+			<div class="overview-left">
+				<h1 class="score">{{ merchants.score }}</h1>
+				<div class="title">综合评分</div>
+				<div class="rank">高于周边商家{{ merchants.rankRate }} </div>
+			</div>
+			<div class="overview-right">
+				<div class="sevice-score">
+					<span class="title">服务态度</span>
+					<div class="rank"><star class="star" :size="36" :score="merchants.serviceScore"></star></div>
+					<span class="score">{{ merchants.serviceScore }}</span>
+				</div>
+				<div class="food-score">
+					<span class="title">商品评价</span>
+					<div class="rank"><star class="star" :size="36" :score="merchants.foodScore"></star></div>
+					<span class="score">{{ merchants.foodScore }}</span>
+				</div>
+				<div class="delivery-time">
+					<span class="title">送达时间</span>
+					<span class="time">{{ merchants.deliveryTime}}分钟</span>
+				</div>
+			</div>
+		</div>
+		<Split class="split"></Split>
+		<ratingSwitch class="rating-switch" :ratings="ratings" :select-type="selectType" :only-content="onlyContent" :desc="desc"></ratingSwitch>
+	</div>
 	</div>
 </template>
 
 <script>
+	import Star from '@/components/Star/Star.vue';
+	import Split from '@/components/Split/Split.vue';
+	import ratingSwitch from '@/components/ratingSwitch/ratingSwitch.vue';
+
+	const ALL = 2;
+
 	export default {
 		name: 'ratings',
 		data () {
 			return {
-				msg: 'I am ratings.'
+				ratings: this.merchants.data,
+				selectType: ALL,
+				onlyContent: false,
+				desc: {
+					all: '全部',
+					positive: '满意',
+					negative: '不满意'
+				}
 			};
+		},
+		props: {
+			merchants: {
+				type: Object
+			}
+		},
+		components: {
+			Star,
+			Split,
+			ratingSwitch
 		}
 	};
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-	p
-		font-size: 18px
-		color: green
+	.ratings
+		position: absolute
+		top: 174px
+		bottom: 0
+		left: 0
+		width: 100%
+		overflow: hidden
+		.overview
+			display: flex
+			padding 18px 0
+			.overview-left
+				flex 0 0 137px
+				width: 137px
+				border-right: 1px solid rgba(7, 17 ,27, .1)
+				text-align: center
+				@media only screen and (max-width: 320px)
+					flex: 0 0 113px
+					width: 0 0 113px
+				.score
+					padding: 6px 0
+					line-height: 28px
+					font-size: 24px
+					color: rgb(255, 153, 0)
+				.title
+					padding-bottom: 8px
+					line-height: 12px
+					font-size: 12px
+					color: rgb(7, 17, 27)
+				.rank
+					padding-bottom: 6px
+					line-height: 10px
+					font-size: 10px
+					color: rgb(147, 153, 159)
+			.overview-right
+				flex: 1
+				padding-left: 24px
+				@media only screen and (max-width: 320px)
+					padding-left: 10px
+				.sevice-score, .food-score
+					margin-bottom: 8px
+					.title
+						display: inline-block
+						vertical-align: top
+						line-height: 18px
+						font-size: 12px
+						color: rgb(7, 17, 27)
+					.rank
+						display: inline-block
+						vertical-align: top
+						vertical-align: top
+						margin: 0 6px
+						.star
+							line-height: 18px
+							font-size: 18px
+					.score
+						display: inline-block
+						vertical-align: top
+						line-height: 18px
+						font-size: 12px
+						color: rgb(255, 153, 0)
+				.delivery-time
+					.title
+						margin-right: 12px
+						line-height: 18px
+						font-size: 12px
+						color: rgb(7, 17, 27)
+					.time
+						line-height: 18px
+						font-size: 12px
+						color: rgb(147, 153, 159)	
 </style>

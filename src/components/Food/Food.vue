@@ -113,13 +113,6 @@
 			},
 			showContent () {
 				this.onlyContent = !this.onlyContent;
-				// if (this.onlyContent) {
-				// 	this.$refs.ratingSelect.ratings.forEach((rating) => {
-				// 		if (!rating.text) {
-				// 			this.$refs.ratingSelect.contentFlag = false;
-				// 		}
-				// 	});
-				// }
 			}
 		},
 		components: {

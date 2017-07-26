@@ -71,6 +71,8 @@
 					
 		&.star-36
 			.star-item
+				display: inline-block
+				background-repeat: no-repeat
 				width: 15px
 				height: 15px
 				margin-right: 6px
@@ -85,6 +87,8 @@
 					bg-image('star36_off')
 		&.star-24	
 			.star-item
+				display: inline-block
+				background-repeat: no-repeat
 				width: 10px
 				height: 10px
 				margin-right: 3px
