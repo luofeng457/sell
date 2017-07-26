@@ -15,6 +15,9 @@
 		props: {
 			food: {
 				type: Object
+			},
+			totalCount: {
+				type: Number
 			}
 		},
 		methods: {
@@ -35,6 +38,11 @@
 				}
 				if (this.food.count) {
 					this.food.count--;
+					if (this.totalCount > 1) {
+						this.$emit('reduce-list', event.target);
+					} else {
+						this.$emit('reduce-zero', event.target);
+					}
 				}
 			}
 		}

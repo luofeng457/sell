@@ -41,14 +41,14 @@
 						<li class="item" v-for="food in selectFoods">
 							<span class="food-name">{{ food.name }}</span>
 							<span class="food-prices">&nbsp;¥&nbsp;{{ food.count * food.price }}</span>
-							<span class="num-control"><cartControl :food="food"></cartControl></span>
+							<span class="num-control"><cartControl :food="food" :total-count="totalCount" v-on:reduce-zero="reduceClear" v-on:reduce-list="refresh"></cartControl></span>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</transition>
 		<transition name="mask-fade">
-			<div class="list-mask" v-show="toggleShow"></div>
+			<div class="list-mask" v-show="toggleShow" @click.stop="hideCart"></div>
 		</transition>
 	</div>
 
@@ -146,6 +146,9 @@
 					this.toggleShow = !this.toggleShow;
 				}
 				if (this.toggleShow) {
+					if (this.totalCount === 0) {
+						this.toggleShow = false;
+					}
 					this.$nextTick(() => {
 						if (!this.scroll) {
 							this.scroll = new BScroll(this.$refs.listContent, {
@@ -157,10 +160,22 @@
 					});
 				}
 			},
+			hideCart () {
+				this.toggleShow = false;
+			},
 			clearMenu () {
 				this.selectFoods.forEach((food) => {
 					food.count = 0;
 					this.toggleShow = false;
+				});
+			},
+			reduceClear () {
+				this.clearMenu();
+				this.scroll.refresh();
+			},
+			refresh () {
+				this.$nextTick(() => {
+					this.scroll.refresh();
 				});
 			},
 			drop (el) {
