@@ -25,7 +25,21 @@
 			</div>
 		</div>
 		<Split class="split"></Split>
-		<ratingSwitch class="rating-switch" :ratings="ratings" :select-type="selectType" :only-content="onlyContent" :desc="desc"></ratingSwitch>
+		<ratingSwitch class="rating-switch"
+			:ratings="ratings"
+			:select-type="selectType"
+			:only-content="onlyContent"
+			:desc="desc"
+			v-on:chose-all="dealAll"
+			v-on:chose-positive="dealPos"
+			v-on:chose-negative="dealNeg"
+			v-on:chose-content="dealContent"
+			></ratingSwitch>
+		<ratingList class="rating-list" 
+		:ratings="ratings"
+		:select-type="selectType"
+		:only-content="onlyContent"
+		></ratingList>
 	</div>
 	</div>
 </template>
@@ -34,14 +48,17 @@
 	import Star from '@/components/Star/Star.vue';
 	import Split from '@/components/Split/Split.vue';
 	import ratingSwitch from '@/components/ratingSwitch/ratingSwitch.vue';
-
+	import ratingList from '@/components/ratingList/ratingList.vue';
+	
+	const POSITIVE = 0;
+	const NEGATIVE = 1;
 	const ALL = 2;
+	const ERR_OK = 0;
 
 	export default {
-		name: 'ratings',
 		data () {
 			return {
-				ratings: this.merchants.data,
+				ratings: [],
 				selectType: ALL,
 				onlyContent: false,
 				desc: {
@@ -56,10 +73,34 @@
 				type: Object
 			}
 		},
+		created () {
+			this.$http.get('/api/ratings').then((response) => {
+			  response = response.body;
+			  if (response.errno === ERR_OK) {
+			    this.ratings = response.data;
+			  }
+			});
+		},
+		methods: {
+			dealAll () {
+				this.selectType = ALL;
+			},
+			dealPos () {
+				this.selectType = POSITIVE;
+			},
+			dealNeg () {
+				this.selectType = NEGATIVE;
+			},
+			dealContent () {
+				this.onlyContent = !this.onlyContent;
+			}
+
+		},
 		components: {
 			Star,
 			Split,
-			ratingSwitch
+			ratingSwitch,
+			ratingList
 		}
 	};
 </script>
@@ -75,6 +116,7 @@
 		.overview
 			display: flex
 			padding 18px 0
+			font-size: 0
 			.overview-left
 				flex 0 0 137px
 				width: 137px
@@ -114,8 +156,7 @@
 					.rank
 						display: inline-block
 						vertical-align: top
-						vertical-align: top
-						margin: 0 6px
+						margin: 0 12px
 						.star
 							line-height: 18px
 							font-size: 18px

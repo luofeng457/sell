@@ -187,7 +187,7 @@
 			height: 28px
 			line-height: 28px
 			padding: 0 22px 0 12px
-			white-space: nowrap
+			white-space: nowrap  //段落省略号
 			overflow: hidden
 			text-overflow: ellipsis
 			vertical-align: top

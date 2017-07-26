@@ -1,12 +1,12 @@
 <template>
 	<div class="rating-switch">
 		<div class="rating-type">
-			<span class="all">{{ desc.all }}<span>{{ ratings.length }}</span></span>
-			<span class="positive">{{ desc.positive }}<span>{{ posRatings }}</span></span>	
-			<span class="negative">{{ desc.negative }}<span>{{ ratings.length - posRatings }}</span></span>	
+			<span class="all" @click="choseAll">{{ desc.all }}<span>{{ ratings.length }}</span></span>
+			<span class="positive" @click="chosePos">{{ desc.positive }}<span>{{ posRatings }}</span></span>	
+			<span class="negative" @click="choseNeg">{{ desc.negative }}<span>{{ ratings.length - posRatings }}</span></span>	
 		</div>
 		<div class="switch">
-			<span class="icon-check_circle"></span>
+			<span class="icon-check_circle" :class="{'all': onlyContent===false}" @click="choseContent"></span>
 			<span class="text">只看有内容的评价</span>
 		</div>
 	</div>
@@ -53,6 +53,20 @@
 					}
 				});
 				return len;
+			}
+		},
+		methods: {
+			choseAll () {
+				this.$emit('chose-all', event.target);
+			},
+			chosePos () {
+				this.$emit('chose-positive', event.target);
+			},
+			choseNeg () {
+				this.$emit('chose-negative', event.target);
+			},
+			choseContent () {
+				this.$emit('chose-content', event.target);
 			}
 		}
 	};

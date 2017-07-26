@@ -12,7 +12,7 @@
         <router-link to="/merchants">商家</router-link>
       </div>
     </div>
-    <router-view :merchants="merchants"></router-view>
+    <router-view :merchants="merchants" :ratings="ratings"></router-view>
   </div>
 </template>
 
@@ -25,7 +25,8 @@
   export default {
     data () {
       return {
-        merchants: {}
+        merchants: {},
+        ratings: []
       };
     },
     created () {

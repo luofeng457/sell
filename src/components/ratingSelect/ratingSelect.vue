@@ -10,7 +10,7 @@
 			<span class="text">只看有内容的评价</span>
 		</div>
 		<div class="segment"></div>
-		<div class="rating-list">
+		<div class="rating-lists">
 			<div class="wrapper" v-for="(rating,index) in ratings" v-show="!onlyContent?true:rating.text">
 				<div class="inner" v-show="selectType===2?true:rating.rateType===selectType">
 					<div class="info">
@@ -150,7 +150,7 @@
 				vertical-align: top
 				font-size: 12px
 				color: rgb(147, 153, 159)
-		.rating-list
+		.rating-lists
 			.wrapper
 				.inner
 					padding: 16px 18px
