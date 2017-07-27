@@ -1,13 +1,13 @@
 <template>
 	<div class="rating-switch">
-		<div class="rating-type">
-			<span class="all" @click="choseAll">{{ desc.all }}<span>{{ ratings.length }}</span></span>
-			<span class="positive" @click="chosePos">{{ desc.positive }}<span>{{ posRatings }}</span></span>	
-			<span class="negative" @click="choseNeg">{{ desc.negative }}<span>{{ ratings.length - posRatings }}</span></span>	
+		<div class="type-chosing">
+			<span class="all-type" @click="choseAll">{{ desc.all }}<span>{{ ratings.length }}</span></span>
+			<span class="positive-type" @click="chosePos">{{ desc.positive }}<span>{{ posRatings }}</span></span>	
+			<span class="negative-type" @click="choseNeg">{{ desc.negative }}<span>{{ ratings.length - posRatings }}</span></span>	
 		</div>
-		<div class="switch">
+		<div class="type-switcher">
 			<span class="icon-check_circle" :class="{'all': onlyContent===false}" @click="choseContent"></span>
-			<span class="text">只看有内容的评价</span>
+			<span class="switcher-text">只看有内容的评价</span>
 		</div>
 	</div>
 </template>
@@ -76,11 +76,11 @@
 	@import '../../common/stylus/mixin.styl'
 
 	.rating-switch
-		.rating-type
+		.type-chosing
 			margin: 18px 0 0 18px
 			padding-bottom: 18px
 			border-1px(rgba(7, 17, 27, .1))
-			.all, .positive, .negative
+			.all-type, .positive-type, .negative-type
 				display: inline-block
 				margin-right: 8px
 				padding: 8px 12px
@@ -93,7 +93,7 @@
 					margin-left: 3px
 			.negative
 				margin-right: 0
-		.switch
+		.type-switcher
 			padding: 12px 18px
 			height: 24px
 			line-height: 24px
@@ -107,7 +107,7 @@
 				color: rgb(0, 160, 220)
 				&.all
 					color: rgb(147, 153, 159)
-			.text
+			.switcher-text
 				display: inline-block
 				vertical-align: top
 				font-size: 12px

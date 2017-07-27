@@ -147,7 +147,7 @@
 				.image-wrapper
 					position: relative
 					width: 100%
-					height: 0	/* 将image-wrapper高度设定为0, 并设置padding-top:10%, margin和padding始终以父元素的宽度作为 */
+					height: 0	/* 将image-wrapper高度设定为0, 并设置padding-top:10%, margin和padding始终以父元素的宽度作为 基准*/
 					padding-top: 100%	/*  */
 					box-sizing: border-box
 					img

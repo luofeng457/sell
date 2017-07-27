@@ -1,50 +1,53 @@
 <template>
-	<div class="ratings">
-	<div class="ratings-content">
-		<div class="overview">
-			<div class="overview-left">
-				<h1 class="score">{{ merchants.score }}</h1>
-				<div class="title">综合评分</div>
-				<div class="rank">高于周边商家{{ merchants.rankRate }} </div>
-			</div>
-			<div class="overview-right">
-				<div class="sevice-score">
-					<span class="title">服务态度</span>
-					<div class="rank"><star class="star" :size="36" :score="merchants.serviceScore"></star></div>
-					<span class="score">{{ merchants.serviceScore }}</span>
+	<transition name="move-in" tag="div">
+		<div class="ratings-menu" ref="ratingsMenu">
+			<div class="ratings-content">
+				<div class="overview">
+					<div class="overview-left">
+						<h1 class="score">{{ merchants.score }}</h1>
+						<div class="title">综合评分</div>
+						<div class="rank">高于周边商家{{ merchants.rankRate }} </div>
+					</div>
+					<div class="overview-right">
+						<div class="sevice-score">
+							<span class="title">服务态度</span>
+							<div class="rank"><star class="star" :size="36" :score="merchants.serviceScore"></star></div>
+							<span class="score">{{ merchants.serviceScore }}</span>
+						</div>
+						<div class="food-score">
+							<span class="title">商品评价</span>
+							<div class="rank"><star class="star" :size="36" :score="merchants.foodScore"></star></div>
+							<span class="score">{{ merchants.foodScore }}</span>
+						</div>
+						<div class="delivery-time">
+							<span class="title">送达时间</span>
+							<span class="time">{{ merchants.deliveryTime}}分钟</span>
+						</div>
+					</div>
 				</div>
-				<div class="food-score">
-					<span class="title">商品评价</span>
-					<div class="rank"><star class="star" :size="36" :score="merchants.foodScore"></star></div>
-					<span class="score">{{ merchants.foodScore }}</span>
-				</div>
-				<div class="delivery-time">
-					<span class="title">送达时间</span>
-					<span class="time">{{ merchants.deliveryTime}}分钟</span>
-				</div>
+				<Split class="split"></Split>
+				<ratingSwitch class="rating-switch"
+					:ratings="ratings"
+					:select-type="selectType"
+					:only-content="onlyContent"
+					:desc="desc"
+					v-on:chose-all="dealAll"
+					v-on:chose-positive="dealPos"
+					v-on:chose-negative="dealNeg"
+					v-on:chose-content="dealContent"
+					></ratingSwitch>
+				<ratingList class="rating-list" 
+				:ratings="ratings"
+				:select-type="selectType"
+				:only-content="onlyContent"
+				></ratingList>
 			</div>
 		</div>
-		<Split class="split"></Split>
-		<ratingSwitch class="rating-switch"
-			:ratings="ratings"
-			:select-type="selectType"
-			:only-content="onlyContent"
-			:desc="desc"
-			v-on:chose-all="dealAll"
-			v-on:chose-positive="dealPos"
-			v-on:chose-negative="dealNeg"
-			v-on:chose-content="dealContent"
-			></ratingSwitch>
-		<ratingList class="rating-list" 
-		:ratings="ratings"
-		:select-type="selectType"
-		:only-content="onlyContent"
-		></ratingList>
-	</div>
-	</div>
+	</transition>
 </template>
 
 <script>
+	import BScroll from 'better-scroll';
 	import Star from '@/components/Star/Star.vue';
 	import Split from '@/components/Split/Split.vue';
 	import ratingSwitch from '@/components/ratingSwitch/ratingSwitch.vue';
@@ -78,23 +81,40 @@
 			  response = response.body;
 			  if (response.errno === ERR_OK) {
 			    this.ratings = response.data;
+			    this.$nextTick(() => {
+			    	this.refresh();
+			    });
 			  }
 			});
 		},
 		methods: {
 			dealAll () {
 				this.selectType = ALL;
+				this.refresh();
 			},
 			dealPos () {
 				this.selectType = POSITIVE;
+				this.refresh();
 			},
 			dealNeg () {
 				this.selectType = NEGATIVE;
+				this.refresh();
 			},
 			dealContent () {
 				this.onlyContent = !this.onlyContent;
+				this.refresh();
+			},
+			refresh () {
+				this.$nextTick(() => {
+					if (!this.scroll) {
+						this.scroll = new BScroll(this.$refs.ratingsMenu, {
+							click: true
+						});
+					} else {
+						this.scroll.refresh();
+					}
+				});
 			}
-
 		},
 		components: {
 			Star,
@@ -106,7 +126,14 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-	.ratings
+	/**
+		* 添加动画优化加载时部分布局变化带来的不良用户体验
+	*/
+	.move-in-enter-active
+		transition all 0.3s
+	.move-in-enter, .move-in-leave-to
+		opacity: 0
+	.ratings-menu
 		position: absolute
 		top: 174px
 		bottom: 0
