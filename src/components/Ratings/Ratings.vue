@@ -134,6 +134,7 @@
 	.move-in-enter, .move-in-leave-to
 		opacity: 0
 	.ratings-menu
+		display: flex
 		position: absolute
 		top: 174px
 		bottom: 0
