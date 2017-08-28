@@ -1,53 +1,55 @@
 <template>
-	<div class="goods">
-		<div class="menu-wrapper" ref="menuWrapper">
-			<ul class="menu-list">
-				<li class="menu-item" v-for="(item, index) in goods" :key="index" :class="{'current': currentIndex===index}" @click="selectMenu(index, $event)">
-					<span class="text border-1px">
-						<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{ item.name }}
-					</span>
-				</li>
-			</ul>
-		</div>
-		<div class="foods-wrapper" ref="foodsWrapper">
-			<ul>
-				<li v-for="(item,goodIndex) in goods" :key="goodIndex" class="food-list food-list-hook">
-					<h1 class="title">{{ item.name }}</h1>
-					<ul>
-						<li @click="foodSelect(food, $event)" v-for="(food,foodIndex) in item.foods" class="food-item food-item-hook">
-							<div class="icon">
-								<img :src="food.icon" width="57" height="57">
-							</div>
-							<div class="content">
-								<h2 class="name">{{ food.name }}</h2>
-								<p class="desc">{{ food.description }}</p>
-								<div class="extra">
-									<span>月售{{ food.sellCount }}份</span>
-									<span>好评率{{ food.rating }}%</span>
-								</div>	
-								<div class="price">
-									<span class="newPrice">¥{{ food.price }}</span>
-									<span class="oldPrice" v-show="food.oldPrice">¥{{ food.price }}</span>
-								</div>
-								<div class="cartcontrol-wrapper">
-									<cartControl :food="food" v-on:cart-add="cartAdd">
-										
-									</cartControl>
-								</div>
-<!-- 								<div class="count">
-									<span class="icon-remove_circle_outline" v-show="food.count" @click="countReduce(goodIndex,foodIndex)"></span>
-									<span class="num" v-show="food.count">{{ food.count }}</span>
-									<span class="icon-add_circle" :key="goodIndex" @click="countAdd(goodIndex,foodIndex)"></span>
-								</div> -->
-							</div>
+	<transition name="show-in">
+			<div class="goods">
+				<div class="menu-wrapper" ref="menuWrapper">
+					<ul class="menu-list">
+						<li class="menu-item" v-for="(item, index) in goods" :key="index" :class="{'current': currentIndex===index}" @click="selectMenu(index, $event)">
+							<span class="text border-1px">
+								<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{ item.name }}
+							</span>
 						</li>
 					</ul>
-				</li>
-			</ul>
-		</div>
-		<shopcart ref="shopcart" :merchants="merchants" :delivery-price="merchants.deliveryPrice" :min-price="merchants.minPrice" :select-foods="selectFoods"></shopcart>
-		<food :food="selectedFood" ref="food" v-on:cart-add="cartAdd" :cartAdd="cartAdd"></food>
-	</div>
+				</div>
+				<div class="foods-wrapper" ref="foodsWrapper">
+					<ul>
+						<li v-for="(item,goodIndex) in goods" :key="goodIndex" class="food-list food-list-hook">
+							<h1 class="title">{{ item.name }}</h1>
+							<ul>
+								<li @click="foodSelect(food, $event)" v-for="(food,foodIndex) in item.foods" class="food-item food-item-hook">
+									<div class="icon">
+										<img :src="food.icon" width="57" height="57">
+									</div>
+									<div class="content">
+										<h2 class="name">{{ food.name }}</h2>
+										<p class="desc">{{ food.description }}</p>
+										<div class="extra">
+											<span>月售{{ food.sellCount }}份</span>
+											<span>好评率{{ food.rating }}%</span>
+										</div>	
+										<div class="price">
+											<span class="newPrice">¥{{ food.price }}</span>
+											<span class="oldPrice" v-show="food.oldPrice">¥{{ food.price }}</span>
+										</div>
+										<div class="cartcontrol-wrapper">
+											<cartControl :food="food" v-on:cart-add="cartAdd">
+												
+											</cartControl>
+										</div>
+		<!-- 								<div class="count">
+											<span class="icon-remove_circle_outline" v-show="food.count" @click="countReduce(goodIndex,foodIndex)"></span>
+											<span class="num" v-show="food.count">{{ food.count }}</span>
+											<span class="icon-add_circle" :key="goodIndex" @click="countAdd(goodIndex,foodIndex)"></span>
+										</div> -->
+									</div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<shopcart ref="shopcart" :merchants="merchants" :delivery-price="merchants.deliveryPrice" :min-price="merchants.minPrice" :select-foods="selectFoods"></shopcart>
+				<food :food="selectedFood" ref="food" v-on:cart-add="cartAdd" :cartAdd="cartAdd"></food>
+			</div>
+	</transition>
 </template>
 
 <script>
@@ -165,7 +167,11 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
 	@import '../../common/stylus/mixin.styl'
-
+	
+	.show-in-enter-active
+		transition all 0.3s
+	.show-in-enter, .show-in-leave-to
+		opacity: 0
 	.goods
 		display: flex
 		position: absolute

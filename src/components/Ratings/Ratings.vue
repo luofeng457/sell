@@ -1,7 +1,7 @@
 <template>
 	<transition name="move-in" tag="div">
 		<div class="ratings-menu" ref="ratingsMenu">
-			<div class="ratings-content">
+			<div class="ratings-menu-wrapper">
 				<div class="overview">
 					<div class="overview-left">
 						<h1 class="score">{{ merchants.score }}</h1>
@@ -40,6 +40,7 @@
 				:ratings="ratings"
 				:select-type="selectType"
 				:only-content="onlyContent"
+				ref="listScrollInvoke"
 				></ratingList>
 			</div>
 		</div>
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-	import BScroll from 'better-scroll';
+	// import BScroll from 'better-scroll';
 	import Star from '@/components/Star/Star.vue';
 	import Split from '@/components/Split/Split.vue';
 	import ratingSwitch from '@/components/ratingSwitch/ratingSwitch.vue';
@@ -81,39 +82,26 @@
 			  response = response.body;
 			  if (response.errno === ERR_OK) {
 			    this.ratings = response.data;
-			    this.$nextTick(() => {
-			    	this.refresh();
-			    });
+			    this.$refs.listScrollInvoke._initListScroll();
 			  }
 			});
 		},
 		methods: {
 			dealAll () {
 				this.selectType = ALL;
-				this.refresh();
+				this.$refs.listScrollInvoke._initListScroll();
 			},
 			dealPos () {
 				this.selectType = POSITIVE;
-				this.refresh();
+				this.$refs.listScrollInvoke._initListScroll();
 			},
 			dealNeg () {
 				this.selectType = NEGATIVE;
-				this.refresh();
+				this.$refs.listScrollInvoke._initListScroll();
 			},
 			dealContent () {
 				this.onlyContent = !this.onlyContent;
-				this.refresh();
-			},
-			refresh () {
-				this.$nextTick(() => {
-					if (!this.scroll) {
-						this.scroll = new BScroll(this.$refs.ratingsMenu, {
-							click: true
-						});
-					} else {
-						this.scroll.refresh();
-					}
-				});
+				this.$refs.listScrollInvoke._initListScroll();
 			}
 		},
 		components: {
@@ -130,78 +118,80 @@
 		* 添加动画优化加载时部分布局变化带来的不良用户体验
 	*/
 	.move-in-enter-active
-		transition all 0.3s
+		transition all 0.4s
 	.move-in-enter, .move-in-leave-to
 		opacity: 0
 	.ratings-menu
 		display: flex
 		position: absolute
 		top: 174px
-		bottom: 0
 		left: 0
+		bottom: 0
 		width: 100%
 		overflow: hidden
-		.overview
-			display: flex
-			padding 18px 0
-			font-size: 0
-			.overview-left
-				flex 0 0 137px
-				width: 137px
-				border-right: 1px solid rgba(7, 17 ,27, .1)
-				text-align: center
-				@media only screen and (max-width: 320px)
-					flex: 0 0 113px
-					width: 0 0 113px
-				.score
-					padding: 6px 0
-					line-height: 28px
-					font-size: 24px
-					color: rgb(255, 153, 0)
-				.title
-					padding-bottom: 8px
-					line-height: 12px
-					font-size: 12px
-					color: rgb(7, 17, 27)
-				.rank
-					padding-bottom: 6px
-					line-height: 10px
-					font-size: 10px
-					color: rgb(147, 153, 159)
-			.overview-right
-				flex: 1
-				padding-left: 24px
-				@media only screen and (max-width: 320px)
-					padding-left: 10px
-				.sevice-score, .food-score
-					margin-bottom: 8px
+		.ratings-menu-wrapper
+			.overview
+				display: flex
+				padding 18px 0
+				font-size: 0
+				.overview-left
+					flex 0 0 137px
+					width: 137px
+					border-right: 1px solid rgba(7, 17 ,27, .1)
+					text-align: center
+					@media only screen and (max-width: 320px)
+						flex: 0 0 113px
+						width: 0 0 113px
+					.score
+						padding: 6px 0
+						line-height: 28px
+						font-size: 24px
+						color: rgb(255, 153, 0)
 					.title
-						display: inline-block
-						vertical-align: top
-						line-height: 18px
+						padding-bottom: 8px
+						line-height: 12px
 						font-size: 12px
 						color: rgb(7, 17, 27)
 					.rank
-						display: inline-block
-						vertical-align: top
-						margin: 0 12px
-						.star
+						padding-bottom: 6px
+						line-height: 10px
+						font-size: 10px
+						color: rgb(147, 153, 159)
+				.overview-right
+					flex: 1
+					padding-left: 24px
+					@media only screen and (max-width: 320px)
+						padding-left: 10px
+					.sevice-score, .food-score
+						margin-bottom: 8px
+						.title
+							display: inline-block
+							vertical-align: top
 							line-height: 18px
-							font-size: 18px
-					.score
-						display: inline-block
-						vertical-align: top
-						line-height: 18px
-						font-size: 12px
-						color: rgb(255, 153, 0)
-				.delivery-time
-					.title
-						margin-right: 12px
-						line-height: 18px
-						font-size: 12px
-						color: rgb(7, 17, 27)
-					.time
-						line-height: 18px
-						font-size: 12px
-						color: rgb(147, 153, 159)	
+							font-size: 12px
+							color: rgb(7, 17, 27)
+						.rank
+							display: inline-block
+							vertical-align: top
+							margin: 0 12px
+							.star
+								line-height: 18px
+								font-size: 18px
+						.score
+							display: inline-block
+							vertical-align: top
+							line-height: 18px
+							font-size: 12px
+							color: rgb(255, 153, 0)
+					.delivery-time
+						.title
+							margin-right: 12px
+							line-height: 18px
+							font-size: 12px
+							color: rgb(7, 17, 27)
+						.time
+							line-height: 18px
+							font-size: 12px
+							color: rgb(147, 153, 159)
+			
 </style>

@@ -332,7 +332,7 @@
 						color: #fff
 		.ball-container
 			.ballDrop-enter-active
-				transition all .5s  cubic-bezier(.44, -0.56, .91, .63)
+				transition all .3s  cubic-bezier(.44, -0.56, .91, .63)
 			.ball
 				position: fixed
 				left: 32px
@@ -343,9 +343,9 @@
 					height: 16px
 					border-radius: 50%
 					background: rgb(0,160,220)
-					transition all .5s linear
+					transition all .3s linear
 		.up-down-enter-active
-			transition all .4s
+			transition all .3s
 		.up-down-enter
 			opacity: 0
 			transform: translate(0, 100%)
@@ -410,7 +410,7 @@
 						font-weight: 700
 						color: rgb(7, 17, 27)								
 		.mask-fade-enter-active
-			transition all .4s linear
+			transition all .3s linear
 		.mask-fade-enter
 			opacity: 0
 		.list-mask
